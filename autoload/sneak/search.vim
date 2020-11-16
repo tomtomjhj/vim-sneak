@@ -1,3 +1,14 @@
+" NOTE: the keys must be escaped before searching
+" TODO: key should be pattern?
+func! sneak#search#subst_alias(s)
+    if empty(g:sneak_alias)
+        return a:s
+    endif
+    let keys = '\v(' . escape(join(keys(g:sneak_alias),'|'), '\.*$^~[]') . ')'
+    let sub = '\=g:sneak_alias[submatch(0)]'
+    return substitute(a:s, keys, sub, 'g')
+endf
+
 func! sneak#search#new() abort
   let s = {}
 
@@ -8,7 +19,9 @@ func! sneak#search#new() abort
     " search pattern modifiers (case-sensitivity, magic)
     let self.prefix = sneak#search#get_cs(a:input, g:sneak#opt.use_ic_scs).'\V'
     " the escaped user input to search for
-    let self.search = substitute(escape(a:input, '"\'), '\a', '\\[[=\0=]]', 'g')
+    " let self.search = substitute(escape(a:input, '"\'), '\a', '\\[[=\0=]]', 'g')
+    let self.search = sneak#search#subst_alias(escape(a:input, '"\'))
+
     " example: highlight string 'ab' after line 42, column 5
     "          matchadd('foo', 'ab\%>42l\%5c', 1)
     let self.match_pattern = ''

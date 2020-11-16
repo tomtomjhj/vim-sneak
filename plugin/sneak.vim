@@ -44,6 +44,10 @@ func! sneak#init() abort
     endif
   endfor
   lockvar g:sneak#opt
+
+  if !exists('g:sneak_alias')
+      let g:sneak_alias = {}
+  endif
 endf
 
 call sneak#init()
