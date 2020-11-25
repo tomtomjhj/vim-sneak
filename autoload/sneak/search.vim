@@ -1,10 +1,10 @@
 " NOTE: the keys must be escaped before searching
-" TODO: key should be pattern?
+" TODO: key should be pattern? escape?
 func! sneak#search#subst_alias(s)
     if empty(g:sneak_alias)
         return a:s
     endif
-    let keys = '\v(' . escape(join(keys(g:sneak_alias),'|'), '\.*$^~[]') . ')'
+    let keys = '\v(' . escape(join(keys(g:sneak_alias),'|'), '/\.*$^~[]<>') . ')'
     let sub = '\=g:sneak_alias[submatch(0)]'
     return substitute(a:s, keys, sub, 'g')
 endf
