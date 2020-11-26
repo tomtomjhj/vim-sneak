@@ -139,14 +139,14 @@ func! sneak#to(op, input, inputlen, count, register, repeatmotion, reverse, incl
       let bounds[1] = a:count + virtcol('.') + 1
     endif
     "Match *all* chars in scope. Use \%<42v (virtual column) instead of \%<42c (byte column).
-    let l:scope_pattern .= '\%>'.bounds[0].'v\%<'.bounds[1].'v'
+    let l:scope_pattern .= '%>'.bounds[0].'v%<'.bounds[1].'v'
   endif
 
   if max(bounds)
     "adjust logical left-bound for the _match_ pattern by -length(s) so that if _any_
     "char is within the logical bounds, it is considered a match.
     let l:leftbound = max([0, (bounds[0] - a:inputlen) + 1])
-    let l:match_bounds   = '\%>'.l:leftbound.'v\%<'.bounds[1].'v'
+    let l:match_bounds   = '%>'.l:leftbound.'v%<'.bounds[1].'v'
     let s.match_pattern .= l:match_bounds
   endif
 
@@ -200,10 +200,10 @@ func! sneak#to(op, input, inputlen, count, register, repeatmotion, reverse, incl
   "Might as well scope to window height (+/- 99).
   let l:top = max([0, line('w0')-99])
   let l:bot = line('w$')+99
-  let l:restrict_top_bot = '\%'.l:gt_lt.curlin.'l\%>'.l:top.'l\%<'.l:bot.'l'
+  let l:restrict_top_bot = '%'.l:gt_lt.curlin.'l%>'.l:top.'l%<'.l:bot.'l'
   let l:scope_pattern .= l:restrict_top_bot
   let s.match_pattern .= l:restrict_top_bot
-  let curln_pattern  = l:match_bounds.'\%'.curlin.'l\%'.l:gt_lt.curcol.'v'
+  let curln_pattern  = l:match_bounds.'%'.curlin.'l%'.l:gt_lt.curcol.'v'
 
   "highlight the vertical 'tunnel' that the search is scoped-to
   if max(bounds) "perform the scoped highlight...
@@ -215,7 +215,7 @@ func! sneak#to(op, input, inputlen, count, register, repeatmotion, reverse, incl
   "highlight actual matches at or below the cursor position
   "  - store in w: because matchadd() highlight is per-window.
   let w:sneak_hl_id = matchadd('Sneak',
-        \ (s.prefix).(s.match_pattern).(s.search).'\|'.curln_pattern.(s.search))
+        \ (s.prefix).(s.match_pattern).(s.search).'|'.curln_pattern.(s.search))
 
   "Let user deactivate with <esc>
   if (has('nvim') || has('gui_running')) && maparg('<esc>', 'n') ==# ""
@@ -314,7 +314,7 @@ func! s:getnchars(n, mode) abort
       endif
     else
       " g:sneak_alias: pressed char ↦ very magic pattern
-      " TODO: highlighting is broken
+      " TODO: pre-init dict for escaping special chars
       let s .= get(g:sneak_alias, c, c)
       if 1 == &iminsert && sneak#util#strlen(s) >= a:n
         "HACK: this can happen if the user entered multiple characters while we
