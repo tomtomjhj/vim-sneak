@@ -313,7 +313,9 @@ func! s:getnchars(n, mode) abort
         return s:st.input
       endif
     else
-      let s .= c
+      " g:sneak_alias: pressed char ↦ very magic pattern
+      " TODO: highlighting is broken
+      let s .= get(g:sneak_alias, c, c)
       if 1 == &iminsert && sneak#util#strlen(s) >= a:n
         "HACK: this can happen if the user entered multiple characters while we
         "were waiting to resolve a multi-char keymap.
