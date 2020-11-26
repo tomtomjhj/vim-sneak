@@ -345,6 +345,10 @@ g:sneak#prompt = '>'
 
         Message displayed at the Sneak input prompt.
 
+g:sneak#alias = { .. }                                  *g:sneak#alias*
+
+    pressed char ↦ very magic pattern
+
 ------------------------------------------------------------------------------
 HIGHLIGHTING                                            *sneak-highlight*
 

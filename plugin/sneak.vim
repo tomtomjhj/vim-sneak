@@ -24,6 +24,8 @@ if exists('##OptionSet')
   augroup END
 endif
 
+let s:escape = { '!': '\!', '#': '\#', '$': '\$', '%': '\%', '&': '\&', '(': '\(', ')': '\)', '*': '\*', '+': '\+', ',': '\,', '-': '\-', '.': '\.', '/': '\/', ':': '\:', ';': '\;', '<': '\<', '=': '\=', '>': '\>', '?': '\?', '@': '\@', '[': '\[', '\': '\\', ']': '\]', '^': '\^', '{': '\{', '|': '\|', '}': '\}', '~': '\~', }
+
 func! sneak#init() abort
   unlockvar g:sneak#opt
   "options                                 v-- for backwards-compatibility
@@ -36,6 +38,7 @@ func! sneak#init() abort
       \ ,'label'        : get(g:, 'sneak#label', get(g:, 'sneak#streak', 0)) && (v:version >= 703) && has("conceal")
       \ ,'label_esc'    : get(g:, 'sneak#label_esc', get(g:, 'sneak#streak_esc', "\<space>"))
       \ ,'prompt'       : get(g:, 'sneak#prompt', '>')
+      \ ,'alias'        : extend(s:escape, get(g:, 'sneak#alias', {}))
       \ }
 
   for k in ['f', 't'] "if user mapped f/t to Sneak, then disable f/t reset.
@@ -313,9 +316,7 @@ func! s:getnchars(n, mode) abort
         return s:st.input
       endif
     else
-      " g:sneak_alias: pressed char ↦ very magic pattern
-      " TODO: pre-init dict for escaping special chars
-      let s .= get(g:sneak_alias, c, c)
+      let s .= get(g:sneak#opt.alias, c, c)
       if 1 == &iminsert && sneak#util#strlen(s) >= a:n
         "HACK: this can happen if the user entered multiple characters while we
         "were waiting to resolve a multi-char keymap.
