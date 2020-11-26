@@ -301,6 +301,7 @@ func! s:ft_hook() abort
 endf
 
 func! s:getnchars(n, mode) abort
+  let typed = ''
   let s = ''
   echo g:sneak#opt.prompt
   for i in range(1, a:n)
@@ -316,6 +317,7 @@ func! s:getnchars(n, mode) abort
         return s:st.input
       endif
     else
+      let typed .= c
       let s .= get(g:sneak#opt.alias, c, c)
       if 1 == &iminsert && sneak#util#strlen(s) >= a:n
         "HACK: this can happen if the user entered multiple characters while we
@@ -326,7 +328,7 @@ func! s:getnchars(n, mode) abort
         break
       endif
     endif
-    redraw | echo g:sneak#opt.prompt . s
+    redraw | echo g:sneak#opt.prompt . typed
   endfor
   return s
 endf
