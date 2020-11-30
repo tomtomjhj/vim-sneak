@@ -110,7 +110,8 @@ func! s:do_label(s, v, reverse, label) abort "{{{
       call cursor(overflow[0], overflow[1])
     endif  " ...else we just switched directions, do not overflow.
   elseif (strlen(g:sneak#opt.label_esc) && choice ==# g:sneak#opt.label_esc)
-        \ || -1 != index(["\<Esc>", "\<C-c>"], choice)
+        " \ || -1 != index(["\<Esc>", "\<C-c>"], choice)
+        " NOTE: returned "\<Esc>" doesn't do anything
     return "\<Esc>" "exit label-mode.
   elseif !mappedtoNext && !has_key(s:matchmap, choice) "press _any_ invalid key to escape.
     call feedkeys(choice) "exit label-mode and fall through to Vim.
