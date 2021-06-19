@@ -132,7 +132,7 @@ func! sneak#to(op, input, inputlen, count, register, repeatmotion, reverse, incl
 
   let l:gt_lt = a:reverse ? '<' : '>'
   let bounds = a:repeatmotion ? s:st.bounds : [0,0] " [left_bound, right_bound]
-  let l:scope_pattern = '' " pattern used to highlight the vertical 'scope'
+  let l:scope_pattern = '\v' " pattern used to highlight the vertical 'scope'
   let l:match_bounds  = ''
 
   "scope to a column of width 2*(v:count1) _except_ for operators/repeat-motion/1-char-search
