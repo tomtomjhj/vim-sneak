@@ -26,7 +26,7 @@ func! sneak#search#new() abort
   func! s.dosearch(...) abort " a:1 : extra search options
     return searchpos(self._searchpattern
           \, self._search_options.(a:0 ? a:1 : '')
-          \, 0
+          \, self.get_stopline()
           \)
   endf
 
